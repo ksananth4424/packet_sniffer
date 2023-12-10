@@ -1,3 +1,3 @@
-# Web-Scrapper
+# Packet Sniffer
 
-An experiment to build a web scrapper in Rust :)
+An experiment to build a packet sniffer in Rust :)
