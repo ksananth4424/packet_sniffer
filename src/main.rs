@@ -1,3 +1,8 @@
-fn main() {
-    println!("Hello, world!");
+mod arguments;
+mod library;
+
+use arguments::parse_arguments;
+
+fn main(){
+    parse_arguments();
 }
