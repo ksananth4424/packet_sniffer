@@ -1,2 +1,2 @@
-pub mod catchPackets;
-pub mod parsePackets; 
+pub mod catch_packets;
+pub mod parse_packets; 

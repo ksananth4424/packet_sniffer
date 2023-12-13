@@ -4,15 +4,15 @@ use crate::lib::catchPackets::packetCapture;
 use crate::lib::parsePackets::packetParser;
 use std::cell::RefCell;
 
-fn isTstampType(val: string) -> Result<(), String> {
-    let domainSet = vec![
+fn is_tstamp_type(val: string) -> Result<(), String> {
+    let domain_set = vec![
         "adapter",
         "host",
         "host_lowprec",
         "host_highprec",
         "adapter_unsynced",
     ];
-    if domainSet.contains(&&val[..]) {
+    if domain_set.contains(&&val[..]) {
         return Ok(());
     }else{
         return Err(format!("The value must be one of the following: {:?}", domainSet));
@@ -25,8 +25,8 @@ fn isTstampType(val: string) -> Result<(), String> {
         }
     }
 
-    fn isPrecisionType(val: string) -> Result<(), String> {
-        let domainSet = vec![
+    fn is_precision_type(val: string) -> Result<(), String> {
+        let domain_set = vec![
             "NANO",
             "MICRO",
             "MILLI",
@@ -39,15 +39,15 @@ fn isTstampType(val: string) -> Result<(), String> {
         }
     }
     
-    pub struct captureSubCommand {}
+    pub struct CaptureSubCommand {}
 
     impl <'a, 'b> captureSubCommand{
         pub fn new() -> captureSubCommand{
-            captureSubCommand{}
+            CaptureSubCommand{}
         }
 
         pub fn get_subcommand(&self) -> App<'a, 'b> {
-            let runArgs = vec![
+            let run_args = vec![
                 Arg::with_name("device_handle")
                     .help("Mention the device interface")
                     .takes_value(true)
@@ -110,7 +110,7 @@ fn isTstampType(val: string) -> Result<(), String> {
                 .subCommand(SubCommand::with_name("run").about("Run the catch command").args(&runArgs))
         }
 
-        pub fn runArgs(
+        pub fn run_args(
             &self,
             device: RefCell<Capture<Inactive>>,
             args: &ArgMatches,
@@ -155,13 +155,13 @@ fn isTstampType(val: string) -> Result<(), String> {
                     }else{
                         packet_capture.printPackets(cap_handle);
                     }
-                    Err(e) => {
-                        eprintln!("Failed to open the device: {:?}", e);
-                    }
+                    // Err(e) => {
+                    //     eprintln!("Failed to open the device: {:?}", e);
+                    // }
                 }
             }
 
-            fn getPrecisionType(&self, val: &str) -> Result<Precision, ()> {
+            fn get_precision_type(&self, val: &str) -> Result<Precision, ()> {
                 match val {
                     "NANO" => Ok(Precision::NANO),
                     "MICRO" => Ok(Precision::MICRO),
@@ -169,7 +169,7 @@ fn isTstampType(val: string) -> Result<(), String> {
                 }
             }
 
-            fn getTstampType(&self, val: &str) -> Result<TimestampType, ()> {
+            fn get_tstamp_type(&self, val: &str) -> Result<TimestampType, ()> {
                 match val {
                     "adapter" => Ok(TimestampType::Adapter),
                     "host" => Ok(TimestampType::Host),
