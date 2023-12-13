@@ -1,10 +1,10 @@
 use pcap::{Capture, Inactive, Precision, TimestampType};
 use clap::{App, Arg, ArgMatches, SubCommand};
-use crate::lib::catchPackets::packetCapture;
-use crate::lib::parsePackets::packetParser;
+use crate::lib::catch_packets::packetCapture;
+use crate::lib::parse_packets::packetParser;
 use std::cell::RefCell;
 
-fn is_tstamp_type(val: string) -> Result<(), String> {
+fn is_tstamp_type(val: String) -> Result<(), String> {
     let domain_set = vec![
         "adapter",
         "host",
@@ -15,34 +15,34 @@ fn is_tstamp_type(val: string) -> Result<(), String> {
     if domain_set.contains(&&val[..]) {
         return Ok(());
     }else{
-        return Err(format!("The value must be one of the following: {:?}", domainSet));
+        return Err(format!("The value must be one of the following: {:?}", domain_set));
     }
 
-    fn is_i32(val: string) -> Result<(), String> {
+    fn is_i32(val: String) -> Result<(), String> {
         match val.parse::<i32>() {
             Ok(_) => Ok(()),
-            Err(_) => Err(err.to_string()),
+            Err(_) => Err("Invalid value".to_string()),
         }
     }
 
-    fn is_precision_type(val: string) -> Result<(), String> {
+    fn is_precision_type(val: String) -> Result<(), String> {
         let domain_set = vec![
             "NANO",
             "MICRO",
             "MILLI",
             "SECONDS",
         ];
-        if domainSet.contains(&&val[..]) {
+        if domain_set.contains(&&val[..]) {
             return Ok(());
         }else{
-            return Err(format!("The value must be one of the following: {:?}", domainSet));
+            return Err(format!("The value must be one of the following: {:?}", domain_set));
         }
     }
     
     pub struct CaptureSubCommand {}
 
-    impl <'a, 'b> captureSubCommand{
-        pub fn new() -> captureSubCommand{
+    impl <'a, 'b> CaptureSubCommand{
+        pub fn new() -> CaptureSubCommand{
             CaptureSubCommand{}
         }
 
@@ -83,13 +83,13 @@ fn is_tstamp_type(val: string) -> Result<(), String> {
                 Arg::with_name("timestamp_type")
                     .help("Set the timestamp type for the catch. (Host / HostLowPrec / HostHighPrec / Adapter / AdapterUnsynced)")
                     .takes_value(true)
-                    .validator(isTstampType)
+                    .validator(is_tstamp_type)
                     .short("ts")
                     .long("timestamp_type"),
                 Arg::with_name("precision")
                     .help("Set the precision for the catch. (NANO / MICRO)")
                     .takes_value(true)
-                    .validator(isPrecisionType)
+                    .validator(is_precision_type)
                     .short("p")
                     .long("precision"),
                 Arg::with_name("filter")
@@ -106,8 +106,8 @@ fn is_tstamp_type(val: string) -> Result<(), String> {
 
             SubCommand::with_name("catch")
                 .about("Catch the packets from the network interface")
-                .subCommand(SubCommand::with_name("list").about("List all the available network interfaces"))
-                .subCommand(SubCommand::with_name("run").about("Run the catch command").args(&runArgs))
+                .subcommand(SubCommand::with_name("list").about("List all the available network interfaces"))
+                .subcommand(SubCommand::with_name("run").about("Run the catch command").args(&runArgs))
         }
 
         pub fn run_args(
@@ -133,7 +133,7 @@ fn is_tstamp_type(val: string) -> Result<(), String> {
                 device = device.buffer_size(temp.parse().unwrap());
             }
             if let Some(temp) = args.value_of("timestamp_type") {
-                device = device.timestamp_type(self.getTstampType(temp).unwrap());
+                device = device.tstamp_type(self.getTstampType(temp).unwrap());
             }
             RefCell::new(device)
         }
@@ -146,7 +146,7 @@ fn is_tstamp_type(val: string) -> Result<(), String> {
                 Ok(mut cap_handle) => {
                     if let Some(temp) = args.value_of("filter") {
                         cap_handle
-                            .filter(temp)
+                            .filter(temp, false)
                             .expect("Failed to set the filter");
                     }
 
@@ -161,15 +161,15 @@ fn is_tstamp_type(val: string) -> Result<(), String> {
                 }
             }
 
-            fn get_precision_type(&self, val: &str) -> Result<Precision, ()> {
+            fn get_precision_type(val: &str) -> Result<Precision, ()> {
                 match val {
-                    "NANO" => Ok(Precision::NANO),
-                    "MICRO" => Ok(Precision::MICRO),
+                    "NANO" => Ok(Precision::Nano),
+                    "MICRO" => Ok(Precision::Micro),
                     _ => Err(()),
                 }
             }
 
-            fn get_tstamp_type(&self, val: &str) -> Result<TimestampType, ()> {
+            fn get_tstamp_type(val: &str) -> Result<TimestampType, ()> {
                 match val {
                     "adapter" => Ok(TimestampType::Adapter),
                     "host" => Ok(TimestampType::Host),

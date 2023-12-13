@@ -1,7 +1,7 @@
 mod arguments;
 mod lib;
 
-use arguments::combine::parse_arguments;
+use arguments::parse_arguments;
 
 fn main(){
     parse_arguments();

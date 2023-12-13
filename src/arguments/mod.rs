@@ -1,12 +1,13 @@
-use clap::{crate_authors, crate_description, crate_name, crate_version, App};
-
 mod catch;
 mod parse;
+
+use clap::{crate_authors, crate_description, crate_name, crate_version, App};
+// use pcap::{Capture, Device};
 
 use std::cell::RefCell;
 use crate::arguments::catch::catchSubcommand;
 use crate::arguments::parse::parseSubcommand;
-use crate::library::library::catchPackets;
+use crate::lib::packet_capture::catchPackets;
 
 pub fn parse_arguments(){
     let catch_subcommand = catchSubcommand::new();
