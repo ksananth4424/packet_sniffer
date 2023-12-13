@@ -8,7 +8,7 @@ impl<'a, 'b> ParseSubcommand {
         ParseSubcommand {}
     }
 
-    pub fn get_sub_command(&self) -> App<'a, 'b> {
+    pub fn get_subcommand(&self) -> App<'a, 'b> {
         let parse_args = vec![
             Arg::with_name("fileName").required(true),
             Arg::with_name("saveFile")

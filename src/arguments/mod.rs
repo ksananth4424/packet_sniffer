@@ -2,16 +2,16 @@ mod catch;
 mod parse;
 
 use clap::{crate_authors, crate_description, crate_name, crate_version, App};
-// use pcap::{Capture, Device};
+use pcap::{Capture, Device};
 
 use std::cell::RefCell;
-use crate::arguments::catch::catchSubcommand;
-use crate::arguments::parse::parseSubcommand;
-use crate::lib::packet_capture::catchPackets;
+use crate::arguments::catch::CatchSubcommand;
+use crate::arguments::parse::ParseSubcommand;
+use crate::lib::catch_packets::PacketCapture;
 
 pub fn parse_arguments(){
-    let catch_subcommand = catchSubcommand::new();
-    let parse_subcommand = parseSubcommand::new();
+    let catch_subcommand = CatchSubcommand::new();
+    let parse_subcommand = ParseSubcommand::new();
 
     let matches = App::new(crate_name!())
         .version(crate_version!())
@@ -23,26 +23,26 @@ pub fn parse_arguments(){
 
     if let Some(sub) = matches.subcommand_matches("catch") {
         if sub.subcommand_matches("list").is_some() {
-            if let err = catchPackets::list_devices() {
+            if let Err(err) = PacketCapture::list_devices() {
                 println!("{}", err);
             }
         }else if let Some(run_args) = sub.subcommand_matches("run"){
             let device;
             match run_args.value_of("device_handler"){
                 Some(handle) => {
-                    device = catch::from_device(handle);
+                    device = Capture::from_device(handle);
                 }
                 None => {
-                    let capture_device = Device::lookup().unwrap();
+                    let capture_device = Device::lookup().unwrap().unwrap();
                     print_default(capture_device.name.clone());
-                    device = catch::from_device(capture_device);
+                    device = Capture::from_device(capture_device);
                 }
             }
             match device {
                 Ok(device) => {
                     let device = RefCell::new(device);
-                    let device = capture_subcommand.run_args(device, run_args);
-                    capture_subcommand.start(device, run_args);
+                    let device = catch_subcommand.run_args(device, run_args);
+                    catch_subcommand.start(device, run_args);
                 }
                 Err(err) => {
                     eprintln!("{}", err.to_string());
