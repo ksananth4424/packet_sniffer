@@ -1,7 +1,6 @@
 use pcap::{Capture, Inactive, Precision, TimestampType};
 use clap::{App, Arg, ArgMatches, SubCommand};
-use crate::lib::catch_packets::packetCapture;
-use crate::lib::parse_packets::packetParser;
+use crate::lib::catch_packets::CatchPackets;
 use std::cell::RefCell;
 
 fn is_tstamp_type(val: String) -> Result<(), String> {
@@ -118,39 +117,67 @@ impl <'a, 'b> CatchSubcommand{
         if let Some(temp) =  args.value_of("promisc") {
             device = device.promisc(temp.parse().unwrap());
         }
+        // Check if the rfmon method is available for the Capture struct
         if let Some(temp) =  args.value_of("rfmon") {
-            device = device.rfmon(temp.parse().unwrap());
+            #[cfg(feature = "inactive")]
+            {
+                device = device.rfmon(temp.parse().unwrap());
+            }
+            #[cfg(not(feature = "inactive"))]
+            {
+                // Handle the case when the rfmon method is not available
+                eprintln!("rfmon method is not available for the Capture struct.");
+            }
         }
-        if let Some(temp) =  args.value_of("snaplen") {
-            device = device.snaplen(temp.parse().unwrap());
+        if let Some(temp) = args.value_of("tstamp_type") {
+            #[cfg(feature = "inactive")]
+            {
+                device = device.tstamp_type(self.get_tstamp_type(temp).unwrap());
+            }
+            #[cfg(not(feature = "inactive"))]
+            {
+                // Handle the case when the tstamp_type method is not available
+                eprintln!("tstamp_type method is not available for the Capture struct.");
+            }
         }
-        if let Some(temp) =  args.value_of("buffer_size") {
-            device = device.buffer_size(temp.parse().unwrap());
+        // if let Some(val) = args.value_of("precision") {
+        //     device = device.precision(self.get_precision_type(val).unwrap());
+        // }
+        #[cfg(feature = "inactive")]
+        {
+            if let Some(val) = args.value_of("precision") {
+                device = device.precision(self.get_precision_type(val).unwrap());
+            }
         }
-        if let Some(temp) = args.value_of("timestamp_type") {
-            device = device.tstamp_type(self.get_tstamp_type(temp).unwrap());
+        #[cfg(not(feature = "inactive"))]
+        {
+            // Handle the case when the precision method is not available
+            eprintln!("precision method is not available for the Capture struct.");
+        }
+        if let Some(val) = args.value_of("snaplen") {
+            device = device.snaplen(val.parse().unwrap());
         }
         RefCell::new(device)
     }
 
     pub fn start(&self, device: RefCell<Capture<Inactive>>, args: &ArgMatches) {
         let device = device.into_inner();
-        let mut packet_capture = packetCapture::new();
+        let mut packet_capture = CatchPackets::new();
         match device.open() {
             Ok(mut cap_handle) => {
                 if let Some(temp) = args.value_of("filter") {
                     cap_handle
-                        .filter(temp, false)
+                        .filter(temp)
                         .expect("Failed to set the filter");
                 }
                 if let Some(temp) = args.value_of("saveFile") {
-                    packet_capture.saveFile(cap_handle, temp);
-                }else{
-                    packet_capture.printPackets(cap_handle);
+                    packet_capture.save_to_file(cap_handle, temp);
+                } else {
+                    packet_capture.print_to_console(cap_handle);
                 }
-                // Err(e) => {
-                //     eprintln!("Failed to open the device: {:?}", e);
-                // }
+            }
+            Err(e) => {
+                eprintln!("Failed to open the device: {:?}", e);
             }
         }
     }

@@ -9,7 +9,7 @@ use pktparse::*;
 use std::string::ToString;
 use tls_parser::TlsMessage;
 
-use serde::{Deserialize, Serialize};
+use serde::{Serialize, Deserialize};
 
 pub struct ParsePacket {}
 

@@ -29,7 +29,7 @@ impl CatchPackets {
     pub fn save_to_file(&mut self, mut cap_handle: Capture<Active>, file_name: &str) {
         match cap_handle.savefile(file_name) {
             Ok(mut file) => {
-                while let Ok(packet) = cap_handle.next_packet() {
+                while let Ok(packet) = cap_handle.next() {
                     file.write(&packet);
                 }
             }
@@ -40,7 +40,7 @@ impl CatchPackets {
     pub fn print_to_console(&mut self, mut cap_handle: Capture<Active>) {
         self.print_headers();
 
-        while let Ok(packet) = cap_handle.next_packet() {
+        while let Ok(packet) = cap_handle.next() {
             let data = packet.data.to_owned();
             let len = packet.header.len;
             let ts: String = format!(
@@ -121,7 +121,7 @@ impl CatchPackets {
     pub fn parse_from_file(
         &mut self,
         file_name: &str,
-        save_file_path: Option<&str>,
+        save_file_path: Option<String>,
         filter: Option<String>,
     ) {
         let pool = ThreadPool::new(num_cpus::get() * 2);
@@ -131,11 +131,11 @@ impl CatchPackets {
 
                 if let Some(filter) = filter {
                     cap_handle
-                        .filter(&filter, false)
+                        .filter(&filter)
                         .expect("Filters invalid, please check the documentation.");
                 }
 
-                while let Ok(packet) = cap_handle.next_packet() {
+                while let Ok(packet) = cap_handle.next() {
                     let data = packet.data.to_owned();
                     let len = packet.header.len;
                     let ts: String = format!(

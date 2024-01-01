@@ -1,5 +1,5 @@
 use clap::{App, Arg, ArgMatches, SubCommand};
-use crate::lib::catch_packets::packetCapture;
+use crate::lib::catch_packets::CatchPackets;
 
 pub struct ParseSubcommand {}
 
@@ -30,7 +30,7 @@ impl<'a, 'b> ParseSubcommand {
     pub fn start(&self, args: &ArgMatches){
         let mut filter = None;
         let mut save_file_path = None;
-        let mut packet_capture = packetCapture::new();
+        let mut packet_capture = CatchPackets::new();
 
         if let Some(temp) = args.value_of("filter") {
             filter = Some(temp.to_string());
@@ -39,7 +39,7 @@ impl<'a, 'b> ParseSubcommand {
             save_file_path = Some(temp.to_string());
         }
         if let Some(temp) = args.value_of("fileName") {
-            packet_capture.parseFromFile(temp, save_file_path, filter);
+            packet_capture.parse_from_file(temp, save_file_path, filter);
         }
     }
 }

@@ -7,7 +7,7 @@ use pcap::{Capture, Device};
 use std::cell::RefCell;
 use crate::arguments::catch::CatchSubcommand;
 use crate::arguments::parse::ParseSubcommand;
-use crate::lib::catch_packets::PacketCapture;
+use crate::lib::catch_packets::CatchPackets;
 
 pub fn parse_arguments(){
     let catch_subcommand = CatchSubcommand::new();
@@ -23,7 +23,7 @@ pub fn parse_arguments(){
 
     if let Some(sub) = matches.subcommand_matches("catch") {
         if sub.subcommand_matches("list").is_some() {
-            if let Err(err) = PacketCapture::list_devices() {
+            if let Err(err) = CatchPackets::list_devices() {
                 println!("{}", err);
             }
         }else if let Some(run_args) = sub.subcommand_matches("run"){
@@ -33,7 +33,7 @@ pub fn parse_arguments(){
                     device = Capture::from_device(handle);
                 }
                 None => {
-                    let capture_device = Device::lookup().unwrap().unwrap();
+                    let capture_device = Device::lookup().unwrap();
                     print_default(capture_device.name.clone());
                     device = Capture::from_device(capture_device);
                 }
