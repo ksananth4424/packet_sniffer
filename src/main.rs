@@ -1,4 +1,4 @@
-mod args;
+mod arguments;
 // mod lib;
 
 use arguments::parse_argumenst;
