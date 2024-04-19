@@ -160,7 +160,7 @@ impl<'a, 'b> CatchSubcommand {
                 if let Some(val) = args.value_of("filter") {
                     cap_handle
                         .filter(val, false)
-                        .expect("Filters invalid, please check the documentation.");
+                        .expect("Filters invalid.");
                 }
 
                 // To select between saving to file and printing to console.
