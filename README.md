@@ -9,6 +9,7 @@ A project to list packets
 * Filter packets while parsing and capturing.
 
 ## File Structure
+```
 .
 ├── Cargo.lock
 ├── Cargo.toml
@@ -23,6 +24,7 @@ A project to list packets
     └── main.rs
 
 2 directories, 9 files
+```
 
 ## Installation
 Ensure that you have `libpcap-dev` (ubuntu) or the corresponding package installed on your system.
