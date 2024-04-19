@@ -96,6 +96,12 @@ $ sudo cargo run capture run --timeout 10000 --savefile captured.pcap
 ## TO DO
 -> Parse Pcap files to JSON files
 
+-> Filter
+
+-> Conversation Tracker
+
+-> If possible conversation limiter
+
 -> Documentation
 
 Happy Coding!!
