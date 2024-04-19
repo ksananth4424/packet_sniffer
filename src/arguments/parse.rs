@@ -1,13 +1,15 @@
-// use crate::args::packet_capture::PacketCapture;
+//here we define the arguments for the parse subcommand
 use clap::{App, Arg, SubCommand};
 
 pub struct ParseSubcommand {}
 
+// Implementing the ParseSubcommand
 impl<'a, 'b> ParseSubcommand {
     pub fn new() -> ParseSubcommand {
         ParseSubcommand {}
     }
 
+    // this function will get the subcommand
     pub fn get_subcommand(&self) -> App<'a, 'b> {
         let parse_args = vec![
             Arg::with_name("file_name").required(true),
@@ -28,19 +30,4 @@ impl<'a, 'b> ParseSubcommand {
             .args(&parse_args)
     }
 
-    // pub fn start(&self, args: &ArgMatches) {
-        // let mut save_file_path = None;
-        // let mut packet_capture = PacketCapture::new();
-        // let mut filter = None;
-
-        // if let Some(val) = args.value_of("filter") {
-            // filter = Some(val.to_string());
-        // }
-        // if let Some(val) = args.value_of("savefile") {
-            // save_file_path = Some(val);
-        // }
-        // if let Some(val) = args.value_of("file_name") {
-        //     packet_capture.parse_from_file(val, save_file_path, filter);
-        // }
-    // }
 }

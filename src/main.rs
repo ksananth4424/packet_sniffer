@@ -1,8 +1,7 @@
-mod args;
-// mod lib;
+mod arguments;
 
-use args::parse_cli_args;
+use arguments::parse_arguments;
 
 fn main() {
-    parse_cli_args();
+    parse_arguments();
 }
