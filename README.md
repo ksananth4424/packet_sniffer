@@ -8,6 +8,22 @@ A project to list packets
 * Multi-threaded parsing of packets.
 * Filter packets while parsing and capturing.
 
+## File Structure
+.
+├── Cargo.lock
+├── Cargo.toml
+├── README.md
+└── src
+    ├── arguments
+    │   ├── catch_packets.rs
+    │   ├── catch.rs
+    │   ├── mod.rs
+    │   ├── parse_packets.rs
+    │   └── parse.rs
+    └── main.rs
+
+2 directories, 9 files
+
 ## Installation
 Ensure that you have `libpcap-dev` (ubuntu) or the corresponding package installed on your system.
 
