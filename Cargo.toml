@@ -1,21 +1,6 @@
 [package]
-name = "snoopy"
-version = "0.3.2"
-authors = ["kanishkarj <kanishkarj@hotmail.com>"]
+name = "packet_sniffer"
 edition = "2018"
-exclude = [
-    "Sample/**/*",
-]
-description = "A highly configurable multi-threaded packet sniffer and parser."
-documentation = "https://github.com/kanishkarj/snoopy"
-homepage = "https://github.com/kanishkarj/snoopy"
-repository = "https://github.com/kanishkarj/snoopy"
-readme = "README.md"
-keywords = ["pcap-parser", "packet-capture", "packet-sniffer", "packet-parsing", "command-line-tool"]
-categories = ["command-line-utilities", "parsing"]
-license-file = "LICENSE"
-travis-ci = { repository = "kanishkarj/snoopy", branch = "master" }
-maintenance = { status = "actively-developed" }
 
 [dependencies]
 clap = "2.33.0"

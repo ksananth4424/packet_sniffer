@@ -1,13 +1,15 @@
-
+//here we define the arguments for the parse subcommand
 use clap::{App, Arg, SubCommand};
 
 pub struct ParseSubcommand {}
 
+// Implementing the ParseSubcommand
 impl<'a, 'b> ParseSubcommand {
     pub fn new() -> ParseSubcommand {
         ParseSubcommand {}
     }
 
+    // this function will get the subcommand
     pub fn get_subcommand(&self) -> App<'a, 'b> {
         let parse_args = vec![
             Arg::with_name("file_name").required(true),

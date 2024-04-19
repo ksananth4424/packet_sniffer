@@ -255,6 +255,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "packet_sniffer"
+version = "0.0.0"
+dependencies = [
+ "clap",
+ "dns-parser",
+ "httparse",
+ "hwaddr",
+ "nom",
+ "num_cpus",
+ "pcap",
+ "pktparse",
+ "serde",
+ "serde_json",
+ "threadpool",
+ "tls-parser",
+]
+
+[[package]]
 name = "pcap"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -486,24 +504,6 @@ name = "siphasher"
 version = "0.3.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "38b58827f4464d87d377d175e90bf58eb00fd8716ff0a62f80356b5e61555d0d"
-
-[[package]]
-name = "snoopy"
-version = "0.3.2"
-dependencies = [
- "clap",
- "dns-parser",
- "httparse",
- "hwaddr",
- "nom",
- "num_cpus",
- "pcap",
- "pktparse",
- "serde",
- "serde_json",
- "threadpool",
- "tls-parser",
-]
 
 [[package]]
 name = "strsim"

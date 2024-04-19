@@ -1,8 +1,12 @@
+// here we define the subcommand for capturing packets from interfaces.
 use crate::arguments::catch_packets::CatchPackets;
 use clap::{App, Arg, ArgMatches, SubCommand};
 use pcap::{Capture, Inactive, Precision, TimestampType};
 use std::cell::RefCell;
 
+// Validators for the arguments
+
+// this function will validate the timestamp type
 fn is_tstamp_type(val: String) -> Result<(), String> {
     let domain_set = vec![
         "Host",
@@ -18,6 +22,7 @@ fn is_tstamp_type(val: String) -> Result<(), String> {
     }
 }
 
+// this function will validate the i32 type
 fn is_i32(val: String) -> Result<(), String> {
     match val.parse::<i32>() {
         Ok(_) => Ok(()),
@@ -25,6 +30,7 @@ fn is_i32(val: String) -> Result<(), String> {
     }
 }
 
+// this function will validate the precision type
 fn is_precision_type(val: String) -> Result<(), String> {
     let domain_set = vec!["Micro", "Nano"];
     if domain_set.contains(&&val[..]) {
@@ -36,11 +42,13 @@ fn is_precision_type(val: String) -> Result<(), String> {
 
 pub struct CatchSubcommand {}
 
+// Implementing the CatchSubcommand
 impl<'a, 'b> CatchSubcommand {
     pub fn new() -> CatchSubcommand {
         CatchSubcommand {}
     }
 
+    // this function will get the subcommand
     pub fn get_subcommand(&self) -> App<'a, 'b> {
         let run_args = vec![
             Arg::with_name("device_handle")
@@ -106,6 +114,7 @@ impl<'a, 'b> CatchSubcommand {
             )
     }
 
+    // this function will run the arguments
     pub fn run_args(
         &self,
         device: RefCell<Capture<Inactive>>,
@@ -140,6 +149,7 @@ impl<'a, 'b> CatchSubcommand {
         RefCell::new(device)
     }
 
+    // this function will start the capture
     pub fn start(&self, device: RefCell<Capture<Inactive>>, args: &ArgMatches) {
         let device = device.into_inner();
         let mut catch_packets = CatchPackets::new();
@@ -166,6 +176,7 @@ impl<'a, 'b> CatchSubcommand {
         }
     }
 
+    // this function will get the precision type
     fn get_precision_type(&self, val: &str) -> Result<Precision, ()> {
         match val {
             "Micro" => Ok(Precision::Nano),
@@ -174,6 +185,7 @@ impl<'a, 'b> CatchSubcommand {
         }
     }
 
+    // this function will get the timestamp type
     fn get_tstamp_type(&self, val: &str) -> Result<TimestampType, ()> {
         match val {
             "Host" => Ok(TimestampType::Host),
